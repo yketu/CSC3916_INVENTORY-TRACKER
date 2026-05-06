@@ -34,12 +34,12 @@ app.listen(PORT, () => {
 var express = require('express');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var authController = require('./routes/auth');
+var authController = require('./auth');
 var authJwtController = require('./middleware/auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 
-var User = require('./models/user');
+var User = require('./Users');
 var Movie = require('./Movies');
 //require('./Reviews'); // register schema
 var mongoose = require('mongoose');
