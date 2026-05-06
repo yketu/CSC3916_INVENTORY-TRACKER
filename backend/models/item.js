@@ -22,5 +22,11 @@ ItemSchema.methods.isCloseToExpiring = function () {
   return this.expirationDate <= threeDaysFromNow;
 };
 
+ItemSchema.methods.getStatus = function () {
+  if (this.isCloseToExpiring()) return "expiring";
+  if (this.isLowStock()) return "low stock";
+  return "ok";
+};
+
 module.exports = mongoose.model("Item", ItemSchema);
 
