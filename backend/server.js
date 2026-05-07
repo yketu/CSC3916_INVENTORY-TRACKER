@@ -12,8 +12,10 @@ app.use(passport.initialize());
 require("./middleware/auth_jwt");
 // routes
 const itemRoutes = require("./routes/items");
+const authRoutes = require("./routes/auth");
 
 app.use("/api/items", itemRoutes);
+app.use("/api/auth", authRoutes);
 //data base connection 
 mongoose.connect(process.env.DB)
   .then(() => console.log("MongoDB connected"))
