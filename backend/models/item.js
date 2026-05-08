@@ -23,8 +23,14 @@ ItemSchema.methods.isCloseToExpiring = function () {
 };
 
 ItemSchema.methods.getStatus = function () {
-  if (this.isCloseToExpiring()) return "expiring";
-  if (this.isLowStock()) return "low stock";
+  const today = new Date();
+  const threeDaysFromNow = new Date();
+  threeDaysFromNow.setDate(today.getDate() + 3);
+
+  if (this.expirationDate < today) return "expired";
+  if (this.expirationDate <= threeDaysFromNow) return "expiring";
+  if (this.quantity <= this.lowStockThreshold) return "low stock";
+
   return "ok";
 };
 

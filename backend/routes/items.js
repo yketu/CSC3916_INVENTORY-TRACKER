@@ -5,9 +5,39 @@ const { isAuthenticated } = require("../middleware/auth_jwt");
 //add new item
 router.post("/", isAuthenticated, async (req, res) => {
   try {
-    const item = new Item(req.body);
-    await item.save();
-    res.status(201).json(item);
+    const { name, quantity, expirationDate } = req.body;
+
+    // 1. Look for EXACT batch match (name + expiration)
+    let item = await Item.findOne({
+      name: name,
+      expirationDate: new Date(expirationDate)
+    });
+
+    if (item) {
+      // SAME BATCH → update quantity
+      item.quantity += quantity;
+      await item.save();
+
+      return res.status(200).json({
+        message: "Existing batch updated (quantity increased)",
+        item
+      });
+    }
+
+    // 2. No exact match → create NEW batch
+    const newItem = new Item({
+      name,
+      quantity,
+      expirationDate
+    });
+
+    await newItem.save();
+
+    return res.status(201).json({
+      message: "New batch created",
+      item: newItem
+    });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
