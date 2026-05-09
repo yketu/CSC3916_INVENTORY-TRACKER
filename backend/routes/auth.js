@@ -6,7 +6,7 @@ const User = require("../models/user");
 router.post("/register", async (req, res) => {
   try {
     const { name, username, password } = req.body;
-    // check if the same username exists
+    // check if there is the same username
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -50,7 +50,6 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 module.exports = router;
 
