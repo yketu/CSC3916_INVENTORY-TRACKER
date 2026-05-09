@@ -12,11 +12,10 @@ const ItemSchema = new mongoose.Schema({
   dateAdded: { type: Date, default: Date.now },
   lowStockThreshold: { type: Number, default: 5 },
 
-  //  NEW: track real usage
   consumptionHistory: [ConsumptionSchema]
 });
 
-// ---------------- STATUS HELPERS ----------------
+// helpers
 
 ItemSchema.methods.isLowStock = function () {
   return this.quantity <= this.lowStockThreshold;
@@ -42,7 +41,7 @@ ItemSchema.methods.getStatus = function () {
   return "ok";
 };
 
-// NEW: real consumption rate
+// consuption
 ItemSchema.methods.getUsageRate = function () {
   const totalConsumed =
     this.consumptionHistory?.reduce((sum, c) => sum + c.quantity, 0) || 0;
