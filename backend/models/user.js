@@ -22,7 +22,6 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-
 // HASH PASSWORD 
 UserSchema.pre("save", async function () {
 
@@ -34,11 +33,9 @@ UserSchema.pre("save", async function () {
 
 });
 
-
 // password checking
 UserSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
-
 
 module.exports = mongoose.model("User", UserSchema);
