@@ -4,7 +4,7 @@ const Item = require("../models/item");
 const { isAuthenticated } = require("../middleware/auth_jwt");
 
 
-// ---------------- CREATE ITEM ----------------
+//create item
 router.post("/", isAuthenticated, async (req, res) => {
   try {
     const { name, quantity, expirationDate } = req.body;
@@ -12,7 +12,7 @@ router.post("/", isAuthenticated, async (req, res) => {
     const expDate = new Date(expirationDate);
     const today = new Date();
 
-    // BLOCK EXPIRED ITEMS
+    // epire item
     if (expDate < today) {
       return res.status(400).json({
         error: "Cannot add expired item"
@@ -52,7 +52,7 @@ router.post("/", isAuthenticated, async (req, res) => {
   }
 });
 
-// ---------------- GET ALL ----------------
+// get all items
 router.get("/", isAuthenticated, async (req, res) => {
   try {
     const items = await Item.find();
@@ -69,7 +69,7 @@ router.get("/", isAuthenticated, async (req, res) => {
   }
 });
 
-// ---------------- UPDATE ITEM (ADD THIS) ----------------
+//update
 router.put("/:id", isAuthenticated, async (req, res) => {
   try {
     const { name, quantity, expirationDate } = req.body;
@@ -90,7 +90,7 @@ router.put("/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-// ---------------- CONSUME ITEM ----------------
+//consume
 router.put("/:id/consume", isAuthenticated, async (req, res) => {
   try {
     const { quantity } = req.body;
@@ -115,7 +115,7 @@ router.put("/:id/consume", isAuthenticated, async (req, res) => {
   }
 });
 
-// ---------------- DELETE ----------------
+// delete rooute
 router.delete("/:id", isAuthenticated, async (req, res) => {
   try {
     await Item.findByIdAndDelete(req.params.id);
@@ -125,7 +125,7 @@ router.delete("/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-// ---------------- ALERTS: LOW STOCK ----------------
+// low stock alert
 router.get("/alerts/low-stock", isAuthenticated, async (req, res) => {
   try {
     const items = await Item.find();
@@ -136,7 +136,7 @@ router.get("/alerts/low-stock", isAuthenticated, async (req, res) => {
   }
 });
 
-// ---------------- ALERTS: EXPIRING ----------------
+// expiting item alert
 router.get("/alerts/expiring", isAuthenticated, async (req, res) => {
   try {
     const items = await Item.find();
@@ -147,7 +147,7 @@ router.get("/alerts/expiring", isAuthenticated, async (req, res) => {
   }
 });
 
-// ---------------- FAST MOVING ----------------
+// fast moving
 router.get("/analytics/fast-moving", isAuthenticated, async (req, res) => {
   try {
     const items = await Item.find();
