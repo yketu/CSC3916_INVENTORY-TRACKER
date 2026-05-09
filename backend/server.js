@@ -8,12 +8,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://inventory-frontend-pdje.onrender.com",
   credentials: true
 }));
-//app.use(passport.initialize());
-//require("./middleware/auth_jwt");
-// routes
 const itemRoutes = require("./routes/items");
 const authRoutes = require("./routes/auth");
 
