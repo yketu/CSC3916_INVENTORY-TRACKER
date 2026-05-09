@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5001/api',
+  baseURL: 'https://inventory-backend-17fp.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },
