@@ -5,8 +5,6 @@ function Dashboard() {
   const [items, setItems] = useState([]);
   const [fastMoving, setFastMoving] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // FIX: Separate selected states for inventory and fast-moving
   const [selectedInventoryItem, setSelectedInventoryItem] = useState(null);
   const [selectedFastMovingItem, setSelectedFastMovingItem] = useState(null);
   const [editItem, setEditItem] = useState(null);
@@ -27,7 +25,7 @@ function Dashboard() {
 
   const LOW_STOCK_LIMIT = 5;
 
-  // ---------------- FETCH ----------------
+  // fetch
   const fetchItems = async () => {
     try {
       const res = await api.get("/items");
@@ -59,8 +57,8 @@ function Dashboard() {
 
     return () => clearInterval(interval);
   }, []);
-
-  // ---------------- ACTIONS ----------------
+  
+  //actions
   const addItem = async (e) => {
     e.preventDefault();
     try {
@@ -91,8 +89,7 @@ function Dashboard() {
       }
     }
   };
-
-  // FIX: Better error handling + prevent consume below 0 is handled in backend
+  
   const consumeItem = async (id) => {
     try {
       await api.put(`/items/${id}/consume`, { quantity: 1 });
@@ -103,7 +100,6 @@ function Dashboard() {
     }
   };
 
-  // FIX: Better error handling for update
   const updateItem = async (e) => {
     e.preventDefault();
     try {
@@ -122,13 +118,12 @@ function Dashboard() {
     window.location.href = "/";
   };
 
-  // ---------------- HELPERS ----------------
+  //helpers
   const getDaysInStock = (dateAdded) => {
     if (!dateAdded) return 1;
     return Math.max(1, Math.ceil((new Date() - new Date(dateAdded)) / (1000 * 60 * 60 * 24)));
   };
-
-  // FIX: Safer expired comparison (compares dates without time)
+  
   const isExpired = (date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -136,8 +131,7 @@ function Dashboard() {
     exp.setHours(0, 0, 0, 0);
     return exp < today;
   };
-
-  // ---------------- ANALYTICS ----------------
+//analytics
   const lowStockItems = items.filter(i => i.quantity <= LOW_STOCK_LIMIT);
   const expiringItems = items.filter(i => {
     const daysLeft = (new Date(i.expirationDate) - new Date()) / (1000 * 60 * 60 * 24);
@@ -145,7 +139,7 @@ function Dashboard() {
   });
   const expiredItems = items.filter(i => isExpired(i.expirationDate));
 
-  // ---------------- SEARCH + SORT ----------------
+  //search and sort
   let filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -160,12 +154,11 @@ function Dashboard() {
     filteredItems.sort((a, b) => getDaysInStock(b.dateAdded) - getDaysInStock(a.dateAdded));
   }
 
-  // ---------------- LOADING ----------------
   if (loading) {
     return <div style={{ textAlign: "center", marginTop: 50 }}>Loading inventory...</div>;
   }
 
-  // ---------------- UI ----------------
+  // user interface part
   return (
     <div style={{ fontFamily: "Arial", maxWidth: 1200, margin: "auto", padding: 20 }}>
       {/* HEADER */}
@@ -220,7 +213,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* FAST MOVING - FIX: uses separate selectedFastMovingItem */}
+      {/* FAST MOVING */}
       {fastMoving.length > 0 && (
         <div style={{ marginTop: 20 }}>
           <h3>Fast Moving Items</h3>
@@ -243,7 +236,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* SEARCH + SORT */}
+      {/* SEARCH and SORT */}
       <div style={{ marginTop: 30, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
         <input
           placeholder="Search items..."
@@ -290,7 +283,7 @@ function Dashboard() {
         </div>
       )}
 
-      {/* INVENTORY LIST - FIX: uses separate selectedInventoryItem */}
+      {/* INVENTORY LIST */}
       <div style={{ marginTop: 30 }}>
         <h3>Inventory Items ({filteredItems.length} total)</h3>
         {filteredItems.length === 0 ? (
